@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "377419743307",
+    "firebase_url": "https://gatilhocerto.firebaseio.com",
+    "project_id": "gatilhocerto",
+    "storage_bucket": "gatilhocerto.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:377419743307:android:fa8488856125f404370dce",
+        "android_client_info": {
+          "package_name": "com.example.gatilhocerto"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "377419743307-ob6l1cjbtqqgrjq0v7ria7tpuc25g4he.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.gatilhocerto",
+            "certificate_hash": "81d8a4f8742789a99e75baa881f0b10712d1a04c"
+          }
+        },
+        {
+          "client_id": "377419743307-0bmu46m2q3speg4ufd20qk393p3tl4jf.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDQuvxa_I0THFPFCxW9_dozo-kYJcVaxWc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "377419743307-0bmu46m2q3speg4ufd20qk393p3tl4jf.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
