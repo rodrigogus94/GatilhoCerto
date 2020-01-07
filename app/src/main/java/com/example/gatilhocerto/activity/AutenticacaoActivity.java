@@ -14,7 +14,7 @@ import android.widget.Switch;
 import android.widget.Toast;
 
 import com.example.gatilhocerto.R;
-import com.example.gatilhocerto.helper.ConfigurarFirebase;
+import com.example.gatilhocerto.helper.ConfiguracaoFirebase;
 import com.example.gatilhocerto.helper.UsuarioFirebase;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -40,11 +40,11 @@ public class AutenticacaoActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_autenticacao);
-        getSupportActionBar().hide();
+
 
         inicializaComponentes();
-        autenticacao = ConfigurarFirebase.getFirebaseAutenticacao();
-        autenticacao.signOut();
+        autenticacao = ConfiguracaoFirebase.getFirebaseAutenticacao();
+
         //verifica se o usuario esta logado
         verificarUsuarioLogado();
 
