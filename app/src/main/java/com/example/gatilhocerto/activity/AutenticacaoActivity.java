@@ -183,8 +183,8 @@ public class AutenticacaoActivity extends AppCompatActivity {
 
     private void inicializaComponentes(){
         campoEmail = findViewById(R.id.editCadastroEmail);
-        campoSenha = findViewById(R.id.editCadastroSenha);
-        botaoAcesso = findViewById(R.id.buttonAcesso);
+        campoSenha = findViewById(R.id.editEmpresaCategoria);
+        botaoAcesso = findViewById(R.id.buttonCadastroEmpresa);
         tipoAcesso = findViewById(R.id.switchAcesso);
         tipoUsuario = findViewById(R.id.switchTipoUsuario);
         linearTipo = findViewById(R.id.linearTipo);
