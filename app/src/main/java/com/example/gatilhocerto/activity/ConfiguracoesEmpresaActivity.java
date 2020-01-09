@@ -10,6 +10,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.View;
+import android.view.textclassifier.SelectionEvent;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -22,7 +23,9 @@ public class ConfiguracoesEmpresaActivity extends AppCompatActivity {
     private EditText editEmpresaNome, editEmpresaTaxa, editEmpresaTempo, editEmpresaCategoria;
     private ImageView imagePerfilEmpresa;
 
-/*
+    private  static  final int SELECAO_GALERIA =200;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -75,7 +78,7 @@ public class ConfiguracoesEmpresaActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
         }
-    }*/
+    }
 
     private void inicializarComponentes(){
 

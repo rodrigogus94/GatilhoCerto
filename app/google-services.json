@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "377419743307-f762c2n78o8mmfi3aguc25p9sosojjdm.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.gatilhocerto",
+            "certificate_hash": "ab026e1f3c262ce47dc034aa33e81148b95da44f"
+          }
+        },
+        {
           "client_id": "377419743307-ob6l1cjbtqqgrjq0v7ria7tpuc25g4he.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
