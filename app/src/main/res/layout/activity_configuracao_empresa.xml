@@ -83,7 +83,7 @@
             android:layout_height="wrap_content"
             android:onClick="validarDadosEmpresa"
             android:padding="16dp"
-            android:text="Cadastrar"
+            android:text="Salvar"
             android:theme="@style/botaoPadrao" />
 
 
