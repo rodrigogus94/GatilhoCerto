@@ -3,24 +3,26 @@ package com.example.gatilhocerto.model;
 import com.example.gatilhocerto.helper.ConfiguracaoFirebase;
 import com.google.firebase.database.DatabaseReference;
 
-public class Empresa {
+public class Produto {
 
     private String idUsuario;
     private String urlImagem;
     private String nome;
-    private String tempo;
-    private String categoria;
-    private Double precoEntrega;
+    private String descricao;
+    private Double preco;
 
-    public Empresa() {
+    public Produto() {
+
     }
 
     public void salvar(){
 
         DatabaseReference firebaseRef = ConfiguracaoFirebase.getFirebase();
-        DatabaseReference empresaRef = firebaseRef.child("empresas")
-                .child( getIdUsuario() );
-        empresaRef.setValue(this);
+        DatabaseReference produtoRef = firebaseRef
+                .child("produtos")
+                .child( getIdUsuario() )
+                .push();
+        produtoRef.setValue(this);
 
     }
 
@@ -48,27 +50,19 @@ public class Empresa {
         this.nome = nome;
     }
 
-    public String getTempo() {
-        return tempo;
+    public String getDescricao() {
+        return descricao;
     }
 
-    public void setTempo(String tempo) {
-        this.tempo = tempo;
+    public void setDescricao(String descricao) {
+        this.descricao = descricao;
     }
 
-    public String getCategoria() {
-        return categoria;
+    public Double getPreco() {
+        return preco;
     }
 
-    public void setCategoria(String categoria) {
-        this.categoria = categoria;
-    }
-
-    public Double getPrecoEntrega() {
-        return precoEntrega;
-    }
-
-    public void setPrecoEntrega(Double precoEntrega) {
-        this.precoEntrega = precoEntrega;
+    public void setPreco(Double preco) {
+        this.preco = preco;
     }
 }

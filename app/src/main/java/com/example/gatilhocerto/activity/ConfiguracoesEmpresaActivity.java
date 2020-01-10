@@ -1,7 +1,6 @@
 package com.example.gatilhocerto.activity;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
@@ -10,10 +9,7 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.util.Log;
 import android.view.View;
-import android.view.textclassifier.SelectionEvent;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -36,8 +32,7 @@ import java.io.ByteArrayOutputStream;
 
 public class ConfiguracoesEmpresaActivity extends AppCompatActivity {
 
-    private EditText editEmpresaNome, editEmpresaCategoria,
-            editEmpresaTempo, editEmpresaTaxa;
+    private EditText editEmpresaNome, editEmpresaCategoria, editEmpresaTempo, editEmpresaTaxa;
     private ImageView imagePerfilEmpresa;
 
     private static final int SELECAO_GALERIA = 200;
@@ -45,6 +40,7 @@ public class ConfiguracoesEmpresaActivity extends AppCompatActivity {
     private DatabaseReference firebaseRef;
     private String idUsuarioLogado;
     private String urlImagemSelecionada = "";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -125,32 +121,30 @@ public class ConfiguracoesEmpresaActivity extends AppCompatActivity {
         String categoria = editEmpresaCategoria.getText().toString();
         String tempo = editEmpresaTempo.getText().toString();
 
-        if( !nome.isEmpty()){
-            if( !taxa.isEmpty()){
-                if( !categoria.isEmpty()){
-                    if( !tempo.isEmpty()){
-
-                        Empresa empresa = new Empresa();
-                        empresa.setIdUsuario( idUsuarioLogado );
-                        empresa.setNome( nome );
-                        empresa.setPrecoEntrega( Double.parseDouble(taxa) );
-                        empresa.setCategoria(categoria);
-                        empresa.setTempo( tempo );
-                        empresa.setUrlImagem( urlImagemSelecionada );
-                        empresa.salvar();
-                        finish();
-
-                    }else{
-                        exibirMensagem("Digite um tempo de entrega");
-                    }
-                }else{
-                    exibirMensagem("Digite uma categoria");
-                }
-            }else{
-                exibirMensagem("Digite uma taxa de entrega");
-            }
-        }else{
+        if( nome.isEmpty()) {
             exibirMensagem("Digite um nome para a empresa");
+
+        }else if( taxa.isEmpty()) {
+            exibirMensagem("Digite uma taxa de entrega");
+
+        }else if( categoria.isEmpty()) {
+            exibirMensagem("Digite uma categoria");
+
+        }else if( tempo.isEmpty()){
+            exibirMensagem("Digite um tempo de entrega");
+
+
+        }else{
+
+            Empresa empresa = new Empresa();
+            empresa.setIdUsuario( idUsuarioLogado );
+            empresa.setNome( nome );
+            empresa.setPrecoEntrega( Double.parseDouble(taxa) );
+            empresa.setCategoria(categoria);
+            empresa.setTempo( tempo );
+            empresa.setUrlImagem( urlImagemSelecionada );
+            empresa.salvar();
+            finish();
         }
 
     }
@@ -206,7 +200,7 @@ public class ConfiguracoesEmpresaActivity extends AppCompatActivity {
                         @Override
                         public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
 
-                            urlImagemSelecionada = taskSnapshot.getMetadata().getReference().getDownloadUrl().toString();
+                            urlImagemSelecionada = taskSnapshot.getDownloadUrl().toString();
                             Toast.makeText(ConfiguracoesEmpresaActivity.this,
                                     "Sucesso ao fazer upload da imagem",
                                     Toast.LENGTH_SHORT).show();
@@ -229,7 +223,7 @@ public class ConfiguracoesEmpresaActivity extends AppCompatActivity {
         editEmpresaCategoria = findViewById(R.id.editEmpresaCategoria);
         editEmpresaTaxa = findViewById(R.id.editempresaTaxa);
         editEmpresaTempo = findViewById(R.id.editEmpresaTempo);
-        imagePerfilEmpresa = findViewById(R.id.imagePerfilEmpresa);
+        imagePerfilEmpresa = findViewById(R.id.imageProduto);
     }
 
 }
