@@ -7,11 +7,16 @@ public class Produto {
 
     private String idUsuario;
     private String urlImagem;
+    private String idProduto;
     private String nome;
     private String descricao;
     private Double preco;
 
     public Produto() {
+        DatabaseReference firebaseRef = ConfiguracaoFirebase.getFirebase();
+        DatabaseReference produtoRef = firebaseRef
+                .child("produtos");
+        setIdProduto(produtoRef.push().getKey());
 
     }
 
@@ -21,9 +26,27 @@ public class Produto {
         DatabaseReference produtoRef = firebaseRef
                 .child("produtos")
                 .child( getIdUsuario() )
-                .push();
+                .child(getIdProduto());
         produtoRef.setValue(this);
 
+    }
+
+    public void remover(){
+        DatabaseReference firebaseRef = ConfiguracaoFirebase.getFirebase();
+        DatabaseReference produtoRef = firebaseRef
+                .child("produtos")
+                .child( getIdUsuario() )
+                .child(getIdProduto());
+        produtoRef.removeValue();
+
+    }
+
+    public String getIdProduto() {
+        return idProduto;
+    }
+
+    public void setIdProduto(String idProduto) {
+        this.idProduto = idProduto;
     }
 
     public String getIdUsuario() {

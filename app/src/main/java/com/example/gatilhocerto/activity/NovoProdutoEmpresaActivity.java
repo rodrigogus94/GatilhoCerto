@@ -122,6 +122,7 @@ public class NovoProdutoEmpresaActivity extends AppCompatActivity {
         String descricao = editProdutoDescricao.getText().toString();
 
 
+
         if(nome.isEmpty()) {
             exibirMensagem("Digite um nome do produto");
 
@@ -132,8 +133,6 @@ public class NovoProdutoEmpresaActivity extends AppCompatActivity {
         }else if( descricao.isEmpty()) {
             exibirMensagem("Digite a descrição do produto");
 
-
-
         }else{
 
 
@@ -142,9 +141,16 @@ public class NovoProdutoEmpresaActivity extends AppCompatActivity {
             produto.setPreco( Double.parseDouble(preco) );
             produto.setDescricao(descricao);
             produto.setUrlImagem(urlImagemSelecionada);
-            produto.salvar();
-            finish();
-            exibirMensagem("Produto salvo com sucesso!");
+            if(urlImagemSelecionada != ""){
+                produto.salvar();
+                finish();
+                exibirMensagem("Produto salvo com sucesso!");
+            }else{
+                exibirMensagem("Por favar adicione a imagem do produto!");
+            }
+
+
+
         }
 
     }
@@ -224,7 +230,7 @@ public class NovoProdutoEmpresaActivity extends AppCompatActivity {
         editProdutoNome = findViewById(R.id.editProdutoNome);
         editProdutoDescricao = findViewById(R.id.editProdutoDescricao);
         editProdutoPreco = findViewById(R.id.editProdutoPreco);
-        imagemProduto = findViewById(R.id.imageProduto);
+        imagemProduto = findViewById(R.id.imagemProduto);
     }
 
 }

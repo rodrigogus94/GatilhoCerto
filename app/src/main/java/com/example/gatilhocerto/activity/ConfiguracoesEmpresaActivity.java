@@ -143,8 +143,14 @@ public class ConfiguracoesEmpresaActivity extends AppCompatActivity {
             empresa.setCategoria(categoria);
             empresa.setTempo( tempo );
             empresa.setUrlImagem( urlImagemSelecionada );
-            empresa.salvar();
-            finish();
+            if(urlImagemSelecionada != ""){
+                empresa.salvar();
+                finish();
+                exibirMensagem("Empresa cadastrado com sucesso!");
+            }else{
+                exibirMensagem("Por favar adicione a imagem da empresa!");
+            }
+
         }
 
     }
@@ -223,7 +229,7 @@ public class ConfiguracoesEmpresaActivity extends AppCompatActivity {
         editEmpresaCategoria = findViewById(R.id.editEmpresaCategoria);
         editEmpresaTaxa = findViewById(R.id.editempresaTaxa);
         editEmpresaTempo = findViewById(R.id.editEmpresaTempo);
-        imagePerfilEmpresa = findViewById(R.id.imageProduto);
+        imagePerfilEmpresa = findViewById(R.id.imagemProduto);
     }
 
 }
