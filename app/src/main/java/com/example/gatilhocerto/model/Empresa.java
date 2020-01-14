@@ -3,7 +3,9 @@ package com.example.gatilhocerto.model;
 import com.example.gatilhocerto.helper.ConfiguracaoFirebase;
 import com.google.firebase.database.DatabaseReference;
 
-public class Empresa {
+import java.io.Serializable;
+
+public class Empresa implements Serializable {
 
     private String idUsuario;
     private String urlImagem;
