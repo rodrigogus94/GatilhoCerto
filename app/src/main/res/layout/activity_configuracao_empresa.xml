@@ -35,7 +35,7 @@
 
 
         <EditText
-            android:id="@+id/editEmpresaNome"
+            android:id="@+id/editNomeCliente"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/bg_edit_text"
@@ -45,7 +45,7 @@
             android:padding="16dp" />
 
         <EditText
-            android:id="@+id/editEmpresaCategoria"
+            android:id="@+id/editEnderecaCliente"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="-2dp"
@@ -56,7 +56,7 @@
             android:padding="16dp" />
 
         <EditText
-            android:id="@+id/editEmpresaTempo"
+            android:id="@+id/editTelefoneCliente"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/bg_edit_text"
