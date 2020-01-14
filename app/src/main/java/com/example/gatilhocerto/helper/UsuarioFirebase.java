@@ -16,7 +16,7 @@ public class UsuarioFirebase {
         return usuario.getCurrentUser();
     }
 
-    public static boolean atualizaTipoUsuario(String tipoUsuario){
+    public static boolean atualizarTipoUsuario(String tipoUsuario){
 
         try{
 

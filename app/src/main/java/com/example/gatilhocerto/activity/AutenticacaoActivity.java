@@ -28,13 +28,12 @@ import com.google.firebase.auth.FirebaseUser;
 
 public class AutenticacaoActivity extends AppCompatActivity {
 
-    private Button botaoAcesso;
+    private Button botaoAcessar;
     private EditText campoEmail, campoSenha;
     private Switch tipoAcesso, tipoUsuario;
-    private LinearLayout linearTipo;
+    private LinearLayout linearTipoUsuario;
 
     private FirebaseAuth autenticacao;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,153 +43,144 @@ public class AutenticacaoActivity extends AppCompatActivity {
 
         inicializaComponentes();
         autenticacao = ConfiguracaoFirebase.getFirebaseAutenticacao();
+        //autenticacao.signOut();
 
-        //verifica se o usuario esta logado
+        //Verificar usuario logado
         verificarUsuarioLogado();
 
         tipoAcesso.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if(isChecked){//empresa
-                    linearTipo.setVisibility(View.VISIBLE);
+                if (isChecked){//empresa
+                    linearTipoUsuario.setVisibility(View.VISIBLE);
                 }else{//usuario
-                    linearTipo.setVisibility(View.GONE);
-
+                    linearTipoUsuario.setVisibility(View.GONE);
                 }
             }
         });
 
-        botaoAcesso.setOnClickListener(new View.OnClickListener() {
+        botaoAcessar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 String email = campoEmail.getText().toString();
                 String senha = campoSenha.getText().toString();
 
-                if(email.isEmpty()){
-                    Toast.makeText(AutenticacaoActivity.this,
-                            "Preencha o campo de E-mail!", Toast.LENGTH_SHORT).show();
-                }else if(senha.isEmpty()){
-                    Toast.makeText(AutenticacaoActivity.this,
-                            "Preencha o campo de senha!", Toast.LENGTH_SHORT).show();
-                }else {
-                    //verifica o estado do switch
-                    if(tipoAcesso.isChecked()){//Cadastro
+                if ( !email.isEmpty() ){
+                    if ( !senha.isEmpty() ){
 
-                        autenticacao.createUserWithEmailAndPassword(
-                                email,senha
-                        ).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                            @Override
-                            public void onComplete(@NonNull Task<AuthResult> task) {
-                                if(task.isSuccessful()){
-                                    Toast.makeText(AutenticacaoActivity.this,
-                                            "Cadastro realizado com sucesso!", Toast.LENGTH_SHORT).show();
-                                    String tipoUsuario = getTipoUsuario();
-                                    UsuarioFirebase.atualizaTipoUsuario(tipoUsuario);
-                                    abrirTelaPrincipal(tipoUsuario);
+                        //Verifica estado do switch
+                        if( tipoAcesso.isChecked() ){//Cadastro
 
-                                }else {
-                                    String erroExcesso;
+                            autenticacao.createUserWithEmailAndPassword(
+                                    email, senha
+                            ).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                                @Override
+                                public void onComplete(@NonNull Task<AuthResult> task) {
 
-                                    try {
-                                        throw task.getException();
+                                    if (task.isSuccessful()){
+
+                                        Toast.makeText(AutenticacaoActivity.this,
+                                                "Cadastro realizado com sucesso!",
+                                                Toast.LENGTH_SHORT).show();
+                                        String tipoUsuario = getTipoUsuario();
+                                        UsuarioFirebase.atualizarTipoUsuario(tipoUsuario);
+                                        abrirTelaPrincipal(tipoUsuario);
+
+                                    }else {
+
+                                        String erroExcecao = "";
+
+                                        try{
+                                            throw task.getException();
+                                        }catch (FirebaseAuthWeakPasswordException e){
+                                            erroExcecao = "Digite uma senha mais forte!";
+                                        }catch (FirebaseAuthInvalidCredentialsException e){
+                                            erroExcecao = "Por favor, digite um e-mail válido";
+                                        }catch (FirebaseAuthUserCollisionException e){
+                                            erroExcecao = "Este conta já foi cadastrada";
+                                        } catch (Exception e) {
+                                            erroExcecao = "ao cadastrar usuário: "  + e.getMessage();
+                                            e.printStackTrace();
+                                        }
+
+                                        Toast.makeText(AutenticacaoActivity.this,
+                                                "Erro: " + erroExcecao ,
+                                                Toast.LENGTH_SHORT).show();
 
                                     }
-                                    catch (FirebaseAuthWeakPasswordException e){
-                                        erroExcesso = " Digite uma senha mais forte!";
-
-                                    }catch (FirebaseAuthInvalidCredentialsException e){
-                                        erroExcesso = " Por favor digite um e-mail válido";
-
-                                    }catch (FirebaseAuthUserCollisionException e){
-                                        erroExcesso = "  conta já está cadastrada";
-
-                                    }catch (Exception e){
-                                        erroExcesso = "ao cadastra o usuário " + e.getMessage();
-                                        e.printStackTrace();
-                                    }
-
-                                    Toast.makeText(AutenticacaoActivity.this,
-                                            "Erro:" + erroExcesso, Toast.LENGTH_SHORT).show();
 
                                 }
-                            }
-                        });
-                    }else{//login
+                            });
 
-                        autenticacao.signInWithEmailAndPassword(
-                                email, senha
-                        ).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                            @Override
-                            public void onComplete(@NonNull Task<AuthResult> task) {
-                                if(task.isSuccessful()){
-                                    Toast.makeText(AutenticacaoActivity.this,
-                                            "Logado com sucesso!", Toast.LENGTH_SHORT).show();
-                                    String tipoUsuario = task.getResult().getUser().getDisplayName();
-                                    abrirTelaPrincipal(tipoUsuario);
+                        }else {//Login
 
-                                }else {
+                            autenticacao.signInWithEmailAndPassword(
+                                    email, senha
+                            ).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                                @Override
+                                public void onComplete(@NonNull Task<AuthResult> task) {
+                                    if (task.isSuccessful()){
 
-                                    String erroExcecao;
+                                        Toast.makeText(AutenticacaoActivity.this,
+                                                "Logado com sucesso",
+                                                Toast.LENGTH_SHORT).show();
+                                        String tipoUsuario = task.getResult().getUser().getDisplayName();
+                                        abrirTelaPrincipal(tipoUsuario);
 
-                                    try {
-                                        throw task.getException();
-                                    }catch ( FirebaseAuthInvalidUserException e ) {
-                                        erroExcecao = "Usuário não está cadastrado.";
-                                    }catch ( FirebaseAuthInvalidCredentialsException e ){
-                                        erroExcecao = "E-mail ou senha não correspondem a um usuário cadastrado";
-                                    }catch (Exception e){
-                                        erroExcecao = "Erro ao cadastrar usuário: "  + e.getMessage();
-                                        e.printStackTrace();
+                                    }else {
+                                        Toast.makeText(AutenticacaoActivity.this,
+                                                "Erro ao fazer login : " + task.getException() ,
+                                                Toast.LENGTH_SHORT).show();
                                     }
-
-                                    Toast.makeText(AutenticacaoActivity.this,
-                                            erroExcecao,
-                                            Toast.LENGTH_SHORT).show();
-
                                 }
-                            }
-                        });
+                            });
 
+                        }
+
+                    }else {
+                        Toast.makeText(AutenticacaoActivity.this,
+                                "Preencha a senha!",
+                                Toast.LENGTH_SHORT).show();
                     }
-
+                }else {
+                    Toast.makeText(AutenticacaoActivity.this,
+                            "Preencha o E-mail!",
+                            Toast.LENGTH_SHORT).show();
                 }
-
 
             }
         });
 
-    }
-
-    private String getTipoUsuario(){
-        return tipoUsuario.isClickable() ? "E" : "U";
     }
 
     private void verificarUsuarioLogado(){
         FirebaseUser usuarioAtual = autenticacao.getCurrentUser();
-        if(usuarioAtual != null){
+        if( usuarioAtual != null ){
             String tipoUsuario = usuarioAtual.getDisplayName();
             abrirTelaPrincipal(tipoUsuario);
         }
     }
 
+    private String getTipoUsuario(){
+        return tipoUsuario.isChecked() ? "E" : "U";
+    }
+
     private void abrirTelaPrincipal(String tipoUsuario){
         if(tipoUsuario.equals("E")){//empresa
-            startActivity(new Intent(getApplicationContext(),EmpresaActivity.class));
+            startActivity(new Intent(getApplicationContext(), EmpresaActivity.class));
         }else{//usuario
-            startActivity(new Intent(getApplicationContext(),HomeActivity.class));
+            startActivity(new Intent(getApplicationContext(), HomeActivity.class));
         }
     }
 
     private void inicializaComponentes(){
         campoEmail = findViewById(R.id.editCadastroEmail);
-        campoSenha = findViewById(R.id.editEmpresaCategoria);
-        botaoAcesso = findViewById(R.id.buttonCadastroEmpresa);
+        campoSenha = findViewById(R.id.editCadastroSenha);
+        botaoAcessar = findViewById(R.id.buttonAcesso);
         tipoAcesso = findViewById(R.id.switchAcesso);
         tipoUsuario = findViewById(R.id.switchTipoUsuario);
-        linearTipo = findViewById(R.id.linearTipo);
-
+        linearTipoUsuario = findViewById(R.id.linearTipoUsuario);
     }
-
-
 
 }
