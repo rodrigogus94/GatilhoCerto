@@ -8,6 +8,13 @@
         android:title="Novo Produto"
         app:showAsAction="always" />
 
+
+    <item
+        android:id="@+id/menuPedidos"
+        android:icon="@drawable/ic_pedidos_black_24dp"
+        android:title="Pedidos"
+        app:showAsAction="always" />
+
     <item
         android:id="@+id/menuConfiguracoes"
         android:title="Configurações"

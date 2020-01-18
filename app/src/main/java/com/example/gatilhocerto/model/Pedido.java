@@ -3,6 +3,7 @@ package com.example.gatilhocerto.model;
 import com.example.gatilhocerto.helper.ConfiguracaoFirebase;
 import com.google.firebase.database.DatabaseReference;
 
+import java.util.HashMap;
 import java.util.List;
 
 public class Pedido {
@@ -13,6 +14,7 @@ public class Pedido {
     private String nome;
     private String endereco;
     private String telefone;
+    private String numeroCasa;
     private List<ItemPedido> itens;
     private Double total;
     private String status = "pendente";
@@ -39,7 +41,40 @@ public class Pedido {
         pedidoRef.setValue(this);
 
     }
+    public void remover(){
 
+        DatabaseReference firebaseRef = ConfiguracaoFirebase.getFirebase();
+        DatabaseReference pedidoRef = firebaseRef.child("pedidos_usuario").child(getIdEmpresa()).child(getIdUsuario());
+        pedidoRef.removeValue();
+    }
+     public void confimar(){
+
+        DatabaseReference firebaseRef = ConfiguracaoFirebase.getFirebase();
+        DatabaseReference pedidoRef = firebaseRef.child("pedidos").child(getIdEmpresa()).child(getIdPedido());
+        pedidoRef.setValue(this);
+
+    }
+
+    public void atualizarStatus() {
+
+        HashMap<String, Object> status = new HashMap<>();
+        status.put("status", getStatus());
+
+
+        DatabaseReference firebaseRef = ConfiguracaoFirebase.getFirebase();
+        DatabaseReference pedidoRef = firebaseRef.child("pedidos").child(getIdEmpresa()).child(getIdPedido());
+        pedidoRef.updateChildren(status);
+
+
+    }
+
+    public String getNumeroCasa() {
+        return numeroCasa;
+    }
+
+    public void setNumeroCasa(String numeroCasa) {
+        this.numeroCasa = numeroCasa;
+    }
 
     public String getIdUsuario() {
         return idUsuario;
@@ -128,4 +163,6 @@ public class Pedido {
     public void setObservacao(String observacao) {
         this.observacao = observacao;
     }
+
+
 }

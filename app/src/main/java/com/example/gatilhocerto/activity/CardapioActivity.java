@@ -63,6 +63,7 @@ public class CardapioActivity extends AppCompatActivity {
     private String idEmpresa;
     private int qtdItensCarrinho;
     private Double totalCarrinho;
+    private int metodoPaamento;
 
 
     @Override
@@ -161,9 +162,6 @@ public class CardapioActivity extends AppCompatActivity {
                 itemPedido.setQuantidade( Integer.parseInt(quantidade) );
 
 
-               for(ItemPedido itemPedido1: itemCarrinho){
-                   
-               }
                 itemCarrinho.add( itemPedido );
 
                 if( pedidoRecuperado == null ){
@@ -172,6 +170,8 @@ public class CardapioActivity extends AppCompatActivity {
 
                 pedidoRecuperado.setNome( usuario.getNome() );
                 pedidoRecuperado.setEndereco( usuario.getEndereco() );
+                pedidoRecuperado.setTelefone(usuario.getTelefone());
+                pedidoRecuperado.setNumeroCasa(usuario.getNumeroCasa());
                 pedidoRecuperado.setItens( itemCarrinho );
                 pedidoRecuperado.salvar();
 
@@ -203,9 +203,11 @@ public class CardapioActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if(dataSnapshot.getValue() != null){
+
                     usuario = dataSnapshot.getValue(Usuario.class);
 
                 }
+                //Adicionar uma janela como precissa de configurar o seu cadastro
                 recuperarPedido();
             }
 
@@ -305,12 +307,57 @@ public class CardapioActivity extends AppCompatActivity {
 
         switch (item.getItemId()){
             case R.id.menuPedido:
-
+                confirmarPedido();
                 break;
 
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void confirmarPedido() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Selecione um método de pagamento");
+
+        CharSequence[] itens = new CharSequence[]{
+          "Dinheiro", "Máquina de cartão"
+        };
+        builder.setSingleChoiceItems(itens, 0, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                metodoPaamento = which;
+
+            }
+        });
+
+        final EditText editObservacao = new EditText(this);
+        editObservacao.setHint("Digite uma Observação");
+        builder.setView(editObservacao);
+
+        builder.setPositiveButton("Confimar", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+                String observacao = editObservacao.getText().toString();
+                pedidoRecuperado.setMetodoDePagamento(metodoPaamento);
+                pedidoRecuperado.setObservacao(observacao);
+                pedidoRecuperado.setStatus("Confirmado");
+                pedidoRecuperado.confimar();
+                pedidoRecuperado.remover();
+                pedidoRecuperado = null;
+            }
+        });
+
+        builder.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+            }
+        });
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
+
     }
 
 
