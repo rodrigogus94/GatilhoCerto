@@ -35,6 +35,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -49,18 +50,20 @@ public class CardapioActivity extends AppCompatActivity {
     private List<Produto> produtos = new ArrayList<>();
     private List<ItemPedido> itemCarrinho = new ArrayList<>();
 
-
-
     private AlertDialog dialog;
     private String idUsuarioLogado;
     private Usuario usuario;
     private Pedido pedidoRecuperado;
+    private TextView textCarrinhoQtde, textCarrinhoTotal;
 
     private RecyclerView recyclerProdutosMenu;
     private ImageView imageEmpresaMenu;
     private TextView textNomeEmpresaMenu,textCategoriaEmpresaMenu,textTaxaEmpresaMenu,textTempoEmpresaMenu;
     private Empresa empresaSelecionada;
     private String idEmpresa;
+    private int qtdItensCarrinho;
+    private Double totalCarrinho;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -133,7 +136,7 @@ public class CardapioActivity extends AppCompatActivity {
 
     }
 
-    private void confirmarQuantidade(final int position) {
+    private void confirmarQuantidade(final int posicao){
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Quantidade");
@@ -142,8 +145,7 @@ public class CardapioActivity extends AppCompatActivity {
         final EditText editQuantidade = new EditText(this);
         editQuantidade.setText("1");
 
-        builder.setView(editQuantidade);
-
+        builder.setView( editQuantidade );
 
         builder.setPositiveButton("Confirmar", new DialogInterface.OnClickListener() {
             @Override
@@ -151,30 +153,32 @@ public class CardapioActivity extends AppCompatActivity {
 
                 String quantidade = editQuantidade.getText().toString();
 
-                Produto produtoSelecionado = produtos.get(position);
+                Produto produtoSelecionado = produtos.get(posicao);
                 ItemPedido itemPedido = new ItemPedido();
-                itemPedido.setIdPedido(produtoSelecionado.getIdProduto());
-                itemPedido.setNomePedido(produtoSelecionado.getNome());
-                itemPedido.setPreco(produtoSelecionado.getPreco());
-                itemPedido.setQuantidade(Integer.parseInt(quantidade));
+                itemPedido.setIdPedido( produtoSelecionado.getIdProduto() );
+                itemPedido.setNomePedido( produtoSelecionado.getNome() );
+                itemPedido.setPreco( produtoSelecionado.getPreco() );
+                itemPedido.setQuantidade( Integer.parseInt(quantidade) );
 
 
-                itemCarrinho.add(itemPedido);
+               for(ItemPedido itemPedido1: itemCarrinho){
+                   
+               }
+                itemCarrinho.add( itemPedido );
 
-                if(pedidoRecuperado == null){
+                if( pedidoRecuperado == null ){
                     pedidoRecuperado = new Pedido(idUsuarioLogado, idEmpresa);
                 }
-                pedidoRecuperado.setNome(usuario.getNome());
-                pedidoRecuperado.setEndereco(usuario.getEndereco());
-                pedidoRecuperado.setTelefone(usuario.getTelefone());
-                pedidoRecuperado.setItens(itemCarrinho);
+
+                pedidoRecuperado.setNome( usuario.getNome() );
+                pedidoRecuperado.setEndereco( usuario.getEndereco() );
+                pedidoRecuperado.setItens( itemCarrinho );
                 pedidoRecuperado.salvar();
-
-
 
 
             }
         });
+
 
         builder.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
             @Override
@@ -215,7 +219,48 @@ public class CardapioActivity extends AppCompatActivity {
 
     private void recuperarPedido(){
 
-        dialog.dismiss();
+        DatabaseReference pedidoRef = firebaseRef.child("pedidos_usuario")
+                .child(idEmpresa).child(idUsuarioLogado);
+
+        pedidoRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                qtdItensCarrinho = 0;
+                totalCarrinho = 0.0;
+                itemCarrinho = new ArrayList<>();
+
+                if(dataSnapshot.getValue() != null){
+                    pedidoRecuperado = dataSnapshot.getValue(Pedido.class);
+
+                    itemCarrinho = pedidoRecuperado.getItens();
+
+                    for(ItemPedido itemPedido: itemCarrinho){
+
+                        int qtde = itemPedido.getQuantidade();
+                        Double preco = itemPedido.getPreco();
+
+                        totalCarrinho += (qtde * preco);
+                        qtdItensCarrinho += qtde;
+
+
+                    }
+                }
+                DecimalFormat decimalFormat = new DecimalFormat("0.00");
+                textCarrinhoQtde.setText("qtd: " + String.valueOf(qtdItensCarrinho));
+                textCarrinhoTotal.setText("R$ " + decimalFormat.format(totalCarrinho));
+
+                dialog.dismiss();
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+
     }
 
 
@@ -277,6 +322,8 @@ public class CardapioActivity extends AppCompatActivity {
         textCategoriaEmpresaMenu = findViewById(R.id.textCategoriaEmpresaMenu);
         textTaxaEmpresaMenu = findViewById(R.id.textEntregaEmpresaMenu);
         textTempoEmpresaMenu = findViewById(R.id.textTempoEmpresaMenu);
+        textCarrinhoQtde = findViewById(R.id.textCarrinhaQtd);
+        textCarrinhoTotal = findViewById(R.id.textCarrinhaTotal);
 
     }
 }
